@@ -5,9 +5,13 @@ import Header from "./components/header";
 function App() {
   return (
     <>
-      <Header />
-      <Card />
-      <Footer />
+      <div className="font-custom bg-cream flex h-full min-h-screen flex-col">
+        <div className="flex flex-1 flex-col gap-2 p-4 text-lg">
+          <Header />
+          <Card />
+        </div>
+        <Footer />
+      </div>
     </>
   );
 }
