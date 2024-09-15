@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 const Chart = ({ data }) => {
   const svgRef = useRef(null);
@@ -31,19 +31,27 @@ const Chart = ({ data }) => {
 
   const { width, height } = dimensions;
   const maxValue = Math.max(...data.map((item) => item.amount));
+  const topPadding = 60;
+  const bottomPadding = 30;
+  const gapPercentage = 20;
 
   return (
-    <div className="relative w-full pb-4">
+    <div className="relative w-full pb-4 md:pt-4">
       <svg ref={svgRef} className="h-[300px] w-full">
         {data.map((item, index) => {
-          const barHeight = (item.amount / maxValue) * (height - 40);
-          const barWidth = `${90 / data.length}%`;
-          const barX = `${index * (100 / data.length)}%`;
-          const barY = height - barHeight - 30;
+          const barHeight =
+            (item.amount / maxValue) * (height - topPadding - bottomPadding);
+          const barWidth = `${(100 - gapPercentage) / data.length}%`;
+          const barX = `${index * (100 / data.length) + gapPercentage / (2 * data.length)}%`;
+          const barY = height - barHeight - bottomPadding;
           return (
             <g key={item.day}>
               <rect
-                className={`cursor-pointer transition-colors duration-300 ${index === todayIndex ? "hover:fill-hoverCyan fill-cyan" : "hover:fill-hoverOrange fill-softRed"}`}
+                className={`cursor-pointer transition-colors duration-300 ${
+                  index === todayIndex
+                    ? "hover:fill-hoverCyan fill-cyan"
+                    : "hover:fill-hoverOrange fill-softRed"
+                }`}
                 x={barX}
                 y={barY}
                 width={barWidth}
@@ -55,7 +63,7 @@ const Chart = ({ data }) => {
               />
               <text
                 className="fill-current text-mediumBrown"
-                x={`${index * (100 / data.length) + 45 / data.length}%`}
+                x={`${index * (100 / data.length) + 50 / data.length}%`}
                 y={height - 10}
                 textAnchor="middle"
               >
@@ -67,15 +75,26 @@ const Chart = ({ data }) => {
       </svg>
       {hoveredBar !== null && (
         <div
-          className="absolute -translate-x-1/2 transform rounded bg-darkBrown px-2 py-1 text-xs font-bold text-white"
+          className="tooltip absolute -translate-x-1/2 transform rounded bg-darkBrown p-2 text-sm font-bold text-white"
           style={{
-            left: `calc(${hoveredBar * (100 / data.length)}% + ${45 / data.length}%)`,
-            top: `${height - (data[hoveredBar].amount / maxValue) * (height - 40) - 70}px`,
+            left: `${hoveredBar * (100 / data.length) + 50 / data.length}%`,
+            top: `${height - (data[hoveredBar].amount / maxValue) * (height - topPadding - bottomPadding) - topPadding - 10}px`,
           }}
         >
           ${data[hoveredBar].amount.toFixed(2)}
         </div>
       )}
+      <style jsx>{`
+        @media (min-width: 768px) {
+          .tooltip {
+            top: ${height -
+            (data[hoveredBar]?.amount / maxValue) *
+              (height - topPadding - bottomPadding) -
+            topPadding +
+            5}px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };

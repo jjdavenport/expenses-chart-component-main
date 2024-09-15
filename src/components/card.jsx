@@ -11,12 +11,16 @@ const Card = () => {
         <Chart data={data} />
         <div className="flex justify-between border-t-2 border-cream pt-4">
           <div className="flex flex-col gap-1 text-left">
-            <span className="text-mediumBrown">Total this month</span>
+            <span className="text-base text-mediumBrown md:text-lg">
+              Total this month
+            </span>
             <span className="text-4xl font-bold text-darkBrown">$478.33</span>
           </div>
           <div className="flex flex-col justify-end text-right">
             <span className="font-bold text-darkBrown">+2.4% </span>
-            <span className="text-mediumBrown">from last month</span>
+            <span className="text-base text-mediumBrown md:text-lg">
+              from last month
+            </span>
           </div>
         </div>
       </main>
