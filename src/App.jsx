@@ -5,8 +5,8 @@ import Header from "./components/header";
 function App() {
   return (
     <>
-      <div className="font-custom bg-cream flex h-full min-h-screen flex-col">
-        <div className="flex flex-1 flex-col gap-2 p-4 text-lg">
+      <div className="flex h-full min-h-screen flex-col bg-cream font-custom md:items-center">
+        <div className="flex flex-1 flex-col justify-center gap-4 p-4 text-lg md:w-[500px]">
           <Header />
           <Card />
         </div>

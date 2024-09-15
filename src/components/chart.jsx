@@ -12,7 +12,7 @@ const Chart = ({ data }) => {
       .getBoundingClientRect();
     const xPosition =
       barElement.left + barElement.width / 2 - chartContainer.left;
-    const yPosition = barElement.top - chartContainer.top - 10;
+    const yPosition = barElement.top - chartContainer.top - 5;
 
     setActiveBar(index);
     setTooltipPosition({ x: xPosition, y: yPosition });
@@ -38,16 +38,17 @@ const Chart = ({ data }) => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <BarChart data={data} margin={{ top: 5, bottom: 5 }}>
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={data} margin={{ top: 30, bottom: 10 }}>
         <XAxis axisLine={false} tickLine={false} dataKey="day" />
         <Tooltip content={toolTip} cursor={false} />
         <Bar
           dataKey="amount"
-          className="hover:fill-hoverOrange cursor-pointer fill-softRed"
+          className={`hover:fill-hoverOrange cursor-pointer fill-softRed`}
           onMouseEnter={(data, index, event) =>
             handleMouseEnter(data, index, event)
           }
+          radius={[6, 6, 6, 6]}
           onMouseLeave={() => setActiveBar(null)}
         />
       </BarChart>
