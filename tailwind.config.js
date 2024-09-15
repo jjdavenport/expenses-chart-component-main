@@ -10,6 +10,7 @@ export default {
         mediumBrown: "hsl(28, 10%, 53%)",
         cream: "hsl(27, 66%, 92%)",
         paleOrange: "hsl(33, 100%, 98%)",
+        hoverOrange: "hsl(10, 100%, 76%)",
       },
       fontFamily: {
         custom: ["dm sans", "sans-serif"],

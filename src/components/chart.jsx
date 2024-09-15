@@ -4,12 +4,18 @@ import { useState, useCallback } from "react";
 const Chart = ({ data }) => {
   const [activeBar, setActiveBar] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const date = new Date();
-  const day = date.getUTCDay();
 
-  const handleMouseEnter = useCallback((data, index) => {
+  const handleMouseEnter = useCallback((data, index, event) => {
+    const barElement = event.target.getBoundingClientRect();
+    const chartContainer = event.currentTarget
+      .closest(".recharts-wrapper")
+      .getBoundingClientRect();
+    const xPosition =
+      barElement.left + barElement.width / 2 - chartContainer.left;
+    const yPosition = barElement.top - chartContainer.top - 10;
+
     setActiveBar(index);
-    setTooltipPosition({ x: data.x + 50, y: data.y - 10 });
+    setTooltipPosition({ x: xPosition, y: yPosition });
   }, []);
 
   const toolTip = ({ payload, active }) => {
@@ -19,8 +25,8 @@ const Chart = ({ data }) => {
           className="absolute rounded border border-gray-300 bg-darkBrown p-2"
           style={{
             pointerEvents: "none",
-            left: tooltipPosition.x,
-            top: tooltipPosition.y,
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
             transform: "translate(-50%, -100%)",
           }}
         >
@@ -28,7 +34,6 @@ const Chart = ({ data }) => {
         </div>
       );
     }
-
     return null;
   };
 
@@ -38,10 +43,12 @@ const Chart = ({ data }) => {
         <XAxis axisLine={false} tickLine={false} dataKey="day" />
         <Tooltip content={toolTip} cursor={false} />
         <Bar
-          onMouseEnter={(data, index) => handleMouseEnter(data, index)}
-          onMouseLeave={() => setActiveBar(null)}
           dataKey="amount"
-          className="cursor-pointer fill-softRed"
+          className="hover:fill-hoverOrange cursor-pointer fill-softRed"
+          onMouseEnter={(data, index, event) =>
+            handleMouseEnter(data, index, event)
+          }
+          onMouseLeave={() => setActiveBar(null)}
         />
       </BarChart>
     </ResponsiveContainer>
