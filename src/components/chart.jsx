@@ -4,6 +4,7 @@ const Chart = ({ data }) => {
   const svgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 300 });
   const [hoveredBar, setHoveredBar] = useState(null);
+  const [todayIndex, setTodayIndex] = useState(null);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -16,8 +17,13 @@ const Chart = ({ data }) => {
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
 
+    const weekdays = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+    const today = weekdays[new Date().getDay()];
+    const todayIdx = data.findIndex((item) => item.day === today);
+    setTodayIndex(todayIdx);
+
     return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
+  }, [data]);
 
   if (!data || data.length === 0) {
     return <div>No data available</div>;
@@ -37,7 +43,7 @@ const Chart = ({ data }) => {
           return (
             <g key={item.day}>
               <rect
-                className="hover:fill-hoverOrange cursor-pointer fill-softRed transition-colors duration-300"
+                className={`cursor-pointer transition-colors duration-300 ${index === todayIndex ? "hover:fill-hoverCyan fill-cyan" : "hover:fill-hoverOrange fill-softRed"}`}
                 x={barX}
                 y={barY}
                 width={barWidth}

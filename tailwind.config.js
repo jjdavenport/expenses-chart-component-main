@@ -11,6 +11,7 @@ export default {
         cream: "hsl(27, 66%, 92%)",
         paleOrange: "hsl(33, 100%, 98%)",
         hoverOrange: "hsl(10, 100%, 76%)",
+        hoverCyan: "hsl(187, 49%, 80%)",
       },
       fontFamily: {
         custom: ["dm sans", "sans-serif"],
