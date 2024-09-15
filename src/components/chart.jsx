@@ -1,58 +1,76 @@
-import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { useState, useCallback } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 const Chart = ({ data }) => {
-  const [activeBar, setActiveBar] = useState(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const svgRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 300 });
+  const [hoveredBar, setHoveredBar] = useState(null);
 
-  const handleMouseEnter = useCallback((data, index, event) => {
-    const barElement = event.target.getBoundingClientRect();
-    const chartContainer = event.currentTarget
-      .closest(".recharts-wrapper")
-      .getBoundingClientRect();
-    const xPosition =
-      barElement.left + barElement.width / 2 - chartContainer.left;
-    const yPosition = barElement.top - chartContainer.top - 5;
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (svgRef.current) {
+        const { width } = svgRef.current.getBoundingClientRect();
+        setDimensions({ width, height: 300 });
+      }
+    };
 
-    setActiveBar(index);
-    setTooltipPosition({ x: xPosition, y: yPosition });
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
+    return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  const toolTip = ({ payload, active }) => {
-    if (active && activeBar !== null && payload && payload.length) {
-      return (
-        <div
-          className="absolute rounded border border-gray-300 bg-darkBrown p-2"
-          style={{
-            pointerEvents: "none",
-            left: `${tooltipPosition.x}px`,
-            top: `${tooltipPosition.y}px`,
-            transform: "translate(-50%, -100%)",
-          }}
-        >
-          <p className="text-cream">{`$${payload[0].value.toFixed(2)}`}</p>
-        </div>
-      );
-    }
-    return null;
-  };
+  if (!data || data.length === 0) {
+    return <div>No data available</div>;
+  }
+
+  const { width, height } = dimensions;
+  const maxValue = Math.max(...data.map((item) => item.amount));
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data} margin={{ top: 30, bottom: 10 }}>
-        <XAxis axisLine={false} tickLine={false} dataKey="day" />
-        <Tooltip content={toolTip} cursor={false} />
-        <Bar
-          dataKey="amount"
-          className={`hover:fill-hoverOrange cursor-pointer fill-softRed`}
-          onMouseEnter={(data, index, event) =>
-            handleMouseEnter(data, index, event)
-          }
-          radius={[6, 6, 6, 6]}
-          onMouseLeave={() => setActiveBar(null)}
-        />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="relative w-full pb-4">
+      <svg ref={svgRef} className="h-[300px] w-full">
+        {data.map((item, index) => {
+          const barHeight = (item.amount / maxValue) * (height - 40);
+          const barWidth = `${90 / data.length}%`;
+          const barX = `${index * (100 / data.length)}%`;
+          const barY = height - barHeight - 30;
+          return (
+            <g key={item.day}>
+              <rect
+                className="hover:fill-hoverOrange cursor-pointer fill-softRed transition-colors duration-300"
+                x={barX}
+                y={barY}
+                width={barWidth}
+                height={barHeight}
+                rx="6"
+                ry="6"
+                onMouseEnter={() => setHoveredBar(index)}
+                onMouseLeave={() => setHoveredBar(null)}
+              />
+              <text
+                className="fill-current text-mediumBrown"
+                x={`${index * (100 / data.length) + 45 / data.length}%`}
+                y={height - 10}
+                textAnchor="middle"
+              >
+                {item.day}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      {hoveredBar !== null && (
+        <div
+          className="absolute -translate-x-1/2 transform rounded bg-darkBrown px-2 py-1 text-xs font-bold text-white"
+          style={{
+            left: `calc(${hoveredBar * (100 / data.length)}% + ${45 / data.length}%)`,
+            top: `${height - (data[hoveredBar].amount / maxValue) * (height - 40) - 70}px`,
+          }}
+        >
+          ${data[hoveredBar].amount.toFixed(2)}
+        </div>
+      )}
+    </div>
   );
 };
 
