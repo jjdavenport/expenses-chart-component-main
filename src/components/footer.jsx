@@ -11,7 +11,7 @@ const Footer = () => {
           >
             Frontend Mentor
           </a>
-          . Coded by{" "}
+          . Coded by
           <a className="underline" href="https://github.com/jjdavenport">
             jjdavenport
           </a>
