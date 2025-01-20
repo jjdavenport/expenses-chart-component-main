@@ -12,7 +12,7 @@ const Footer = () => {
             Frontend Mentor
           </a>
           . Coded by
-          <a className="underline" href="https://github.com/jjdavenport">
+          <a className="pl-1 underline" href="https://github.com/jjdavenport">
             jjdavenport
           </a>
           .

@@ -7,5 +7,6 @@
   :root {
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
+    --chart-2: hsl(186, 34%, 60%);
   }
 }
