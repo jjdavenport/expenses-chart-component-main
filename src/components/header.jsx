@@ -5,8 +5,8 @@ const Header = () => {
     <>
       <header className="flex items-center justify-between rounded-2xl bg-softRed p-6">
         <div className="flex flex-col gap-1 text-paleOrange">
-          <span className="font-normal">My balance</span>
-          <span className="text-2xl font-bold">$921.48</span>
+          <span className="text-base font-normal">My balance</span>
+          <span className="text-3xl font-bold">$921.48</span>
         </div>
         <div>
           <img src={logo} />

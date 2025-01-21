@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import data from "./assets/data.json";
 import ToolTip from "./tooltip";
+import useDate from "./hooks/useDate";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import {
   Card,
   CardContent,
@@ -9,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 const chartConfig = {
   desktop: {
@@ -18,15 +19,18 @@ const chartConfig = {
   },
 };
 
-// use hover state to set the tooltip
-
-const CustomBar = ({ x, y, width, height, fill, opacity }) => {
+const CustomBar = ({
+  x,
+  y,
+  width,
+  height,
+  fill,
+  opacity,
+  isToday,
+  onMouseOver,
+  onMouseOut,
+}) => {
   const borderRadius = 4;
-  const style = {
-    transition: "all 0.3s ease-in-out",
-    opacity: opacity,
-    cursor: "pointer",
-  };
 
   return (
     <rect
@@ -34,20 +38,27 @@ const CustomBar = ({ x, y, width, height, fill, opacity }) => {
       y={y}
       width={width}
       height={height}
-      fill={fill}
+      fill={isToday ? "hsl(186, 34%, 60%)" : fill}
       rx={borderRadius}
       ry={borderRadius}
-      style={style}
+      style={{
+        transition: "opacity 0.3s ease-in-out",
+        opacity: opacity,
+        cursor: "pointer",
+      }}
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut}
     />
   );
 };
 
 const Chart = () => {
+  const { day: today } = useDate();
   const [hover, setHover] = useState(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   return (
-    <Card className="rounded-2xl">
+    <Card className="rounded-2xl border-none shadow-none outline-none">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-darkBrown">
           Spending - Last 7 days
@@ -77,7 +88,7 @@ const Chart = () => {
             <Bar
               dataKey="amount"
               fill="var(--color-desktop)"
-              shape={({ x, y, width, height, fill, index }) => (
+              shape={({ x, y, width, height, fill, payload, index }) => (
                 <CustomBar
                   x={x}
                   y={y}
@@ -85,18 +96,14 @@ const Chart = () => {
                   height={height}
                   fill={fill}
                   opacity={hover === index ? 0.6 : 1}
+                  isToday={payload.day === today}
+                  onMouseOver={() => {
+                    setHover(index);
+                    setPosition({ x: x - 5, y: y - 40 });
+                  }}
+                  onMouseOut={() => setHover(null)}
                 />
               )}
-              onMouseOver={(data, index) => {
-                setHover(index);
-                setPosition({
-                  x: data.x - 5,
-                  y: data.y - 40,
-                });
-              }}
-              onMouseOut={() => {
-                setHover(null);
-              }}
               radius={4}
             />
           </BarChart>
@@ -104,18 +111,18 @@ const Chart = () => {
       </CardContent>
       <CardFooter className="flex items-end justify-between gap-2 text-sm">
         <div className="flex flex-col gap-2">
-          <div className="flex gap-2 text-base font-medium leading-none text-mediumBrown md:text-lg">
+          <div className="flex gap-2 text-base font-medium leading-none text-mediumBrown">
             Total this month
           </div>
           <div className="flex gap-2 text-4xl font-bold leading-none text-darkBrown">
             $476.33
           </div>
         </div>
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-end gap-1">
           <div className="text-muted-foreground font-bold leading-none text-darkBrown">
             +2.4%
           </div>
-          <div className="text-muted-foreground text-base leading-none text-mediumBrown md:text-lg">
+          <div className="text-muted-foreground text-base leading-none text-mediumBrown">
             from last month
           </div>
         </div>
