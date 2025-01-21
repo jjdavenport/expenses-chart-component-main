@@ -1,8 +1,14 @@
+import fluid, { extract, screens } from "fluid-tailwind";
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["class"],
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./index.html"],
+  darkMode: ["selector"],
+  content: {
+    files: ["./src/**/*.{js,jsx,ts,tsx}", "./index.html"],
+    extract,
+  },
   theme: {
+    screens,
     extend: {
       colors: {
         softRed: "hsl(10, 79%, 65%)",
@@ -11,8 +17,6 @@ export default {
         mediumBrown: "hsl(28, 10%, 53%)",
         cream: "hsl(27, 66%, 92%)",
         paleOrange: "hsl(33, 100%, 98%)",
-        hoverOrange: "hsl(10, 100%, 76%)",
-        hoverCyan: "hsl(187, 49%, 80%)",
       },
       fontFamily: {
         custom: ["dm sans", "sans-serif"],
@@ -24,5 +28,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), fluid],
 };

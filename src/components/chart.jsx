@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import data from "../assets/data.json";
 import ToolTip from "./tooltip";
@@ -21,12 +22,13 @@ const chartConfig = {
 };
 
 const Chart = () => {
+  const desktop = useMediaQuery({ minWidth: 768 });
   const { day: today } = useDate();
   const [hover, setHover] = useState(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   return (
-    <Card className="rounded-2xl border-none shadow-none outline-none">
+    <Card className="rounded-xl border-none shadow-none outline-none md:rounded-2xl">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-darkBrown">
           Spending - Last 7 days
@@ -45,7 +47,7 @@ const Chart = () => {
               tick={{
                 fill: "hsl(28, 10%, 53%)",
                 fontWeight: "500",
-                fontSize: "14px",
+                fontSize: desktop ? "14px" : "12px",
               }}
             />
             <ChartTooltip
@@ -68,7 +70,11 @@ const Chart = () => {
                   isToday={payload.day === today}
                   onMouseOver={() => {
                     setHover(index);
-                    setPosition({ x: x - 5, y: y - 40 });
+                    setPosition(
+                      desktop
+                        ? { x: x - 5, y: y - 40 }
+                        : { x: x - 5, y: y - 30 },
+                    );
                   }}
                   onMouseOut={() => {
                     setHover(null);
@@ -80,20 +86,20 @@ const Chart = () => {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex items-end justify-between gap-2 text-sm">
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2 text-base font-medium leading-none text-mediumBrown">
+      <CardFooter className="flex items-end justify-between">
+        <div className="~sm/md:~gap-1/2 flex flex-col">
+          <div className="~sm/md:~text-sm/base flex font-medium leading-none text-mediumBrown">
             Total this month
           </div>
-          <div className="flex gap-2 text-4xl font-bold leading-none text-darkBrown">
+          <div className="~sm/md:~text-3xl/4xl flex font-bold leading-none text-darkBrown">
             $476.33
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1">
-          <div className="text-muted-foreground font-bold leading-none text-darkBrown">
+        <div className="~sm/md:~gap-0/1 flex flex-col items-end">
+          <div className="text-muted-foreground text-sm font-bold leading-none text-darkBrown">
             +2.4%
           </div>
-          <div className="text-muted-foreground text-base leading-none text-mediumBrown">
+          <div className="text-muted-foreground ~sm/md:~text-sm/base leading-none text-mediumBrown">
             from last month
           </div>
         </div>
