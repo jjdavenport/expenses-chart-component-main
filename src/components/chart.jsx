@@ -1,55 +1,23 @@
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import data from "./assets/data.json";
+import data from "../assets/data.json";
 import ToolTip from "./tooltip";
-import useDate from "./hooks/useDate";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import useDate from "../hooks/useDate";
+import CustomBar from "./custom-bar";
+import { ChartContainer, ChartTooltip } from "@/ui/chart";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/ui/card";
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
     color: "hsl(var(--chart-1))",
   },
-};
-
-const CustomBar = ({
-  x,
-  y,
-  width,
-  height,
-  fill,
-  opacity,
-  isToday,
-  onMouseOver,
-  onMouseOut,
-}) => {
-  const borderRadius = 4;
-
-  return (
-    <rect
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      fill={isToday ? "hsl(186, 34%, 60%)" : fill}
-      rx={borderRadius}
-      ry={borderRadius}
-      style={{
-        transition: "opacity 0.3s ease-in-out",
-        opacity: opacity,
-        cursor: "pointer",
-      }}
-      onMouseOver={onMouseOver}
-      onMouseOut={onMouseOut}
-    />
-  );
 };
 
 const Chart = () => {
