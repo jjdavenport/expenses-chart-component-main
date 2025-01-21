@@ -84,6 +84,7 @@ const Chart = () => {
               position={{ x: position.x, y: position.y }}
               cursor={false}
               content={<ToolTip />}
+              active={hover !== null}
             />
             <Bar
               dataKey="amount"
@@ -101,7 +102,9 @@ const Chart = () => {
                     setHover(index);
                     setPosition({ x: x - 5, y: y - 40 });
                   }}
-                  onMouseOut={() => setHover(null)}
+                  onMouseOut={() => {
+                    setHover(null);
+                  }}
                 />
               )}
               radius={4}
