@@ -28,7 +28,7 @@ const Chart = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   return (
-    <Card className="rounded-xl border-none shadow-none outline-none md:rounded-2xl">
+    <Card className="~sm/md:~p-0/2 rounded-xl border-none shadow-none outline-none md:rounded-2xl">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-darkBrown">
           Spending - Last 7 days
@@ -73,7 +73,7 @@ const Chart = () => {
                     setPosition(
                       desktop
                         ? { x: x - 5, y: y - 40 }
-                        : { x: x - 5, y: y - 30 },
+                        : { x: x - 6, y: y - 30 },
                     );
                   }}
                   onMouseOut={() => {
@@ -86,7 +86,8 @@ const Chart = () => {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex items-end justify-between">
+      <div className="mx-6 border border-cream"></div>
+      <CardFooter className="flex items-end justify-between pt-6">
         <div className="~sm/md:~gap-1/2 flex flex-col">
           <div className="~sm/md:~text-sm/base flex font-medium leading-none text-mediumBrown">
             Total this month
